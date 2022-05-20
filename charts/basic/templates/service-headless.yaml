@@ -1,8 +1,8 @@
-{{- if .Values.service.enabled}}
+{{- if and (.Values.service.headless) (eq .Values.service.type "ClusterIP")}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "basic.fullname" . }}
+  name: {{ include "basic.fullname" . }}-headless
   labels:
     {{- include "basic.labels" . | nindent 4 }}
 spec:

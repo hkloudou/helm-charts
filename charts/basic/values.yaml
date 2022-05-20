@@ -3,12 +3,13 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
+useStatefulSet: false
 
 image:
-  repository: nginx
+  repository: hkloudou/empty
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -22,7 +23,12 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
-
+ports:
+  enabled: false
+  items:
+    - name: http
+      containerPort: 80
+      protocol: TCP
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -37,8 +43,11 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  enabled: false
+  headlessEnabled: false
   type: ClusterIP
   port: 80
+  targetPort: http
 
 ingress:
   enabled: false
@@ -67,13 +76,35 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
+livenessProbe: 
+  enable: false
+  item: {}
+  # initialDelaySeconds: 30
+  # periodSeconds: 10
+  # timeoutSeconds: 5
+  # failureThreshold: 6
+  # successThreshold: 1
+readinessProbe: 
+  enable: false
+  item: {}
+  # initialDelaySeconds: 5
+  # periodSeconds: 10
+  # timeoutSeconds: 5
+  # failureThreshold: 6
+  # successThreshold: 1
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+initContainers:
+  enable: false
+  auto: false
+  url: "https://storage.googleapis.com/fix/bin"
+  fn: "bin"
+  fnlocal: "bin"
+  contains: []
 
 nodeSelector: {}
 
