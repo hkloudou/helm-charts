@@ -60,3 +60,27 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{- define "basic.volumes" -}}
+{{- if .Values.secretFile.enable}}
+- name: auto-secret-files
+  secret:
+    secretName: {{ printf "%s-secret-files" (include "basic.fullname" .) }}
+{{- end -}}
+{{- end -}}
+
+
+{{- define "basic.volumeMounts" -}}
+{{- if .Values.secretFile.enable}}
+- name: auto-secret-files
+  mountPath: {{ .Values.secretFile.mounted }}
+{{- end -}}
+{{- end -}}
+
+{{- define "basic.envs"}}
+{{- range $key,$val := .Values.envs }}
+- name: {{$key}}
+  value: {{$val | quote}}
+{{- end }}
+{{- end }}

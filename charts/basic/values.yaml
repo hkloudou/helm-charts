@@ -106,8 +106,14 @@ initContainers:
   fnlocal: "bin"
   contains: []
 
+secretFile:
+  enable: false
+  mounted: /secret
+
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+envs: 

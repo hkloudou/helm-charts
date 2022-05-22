@@ -52,11 +52,13 @@ spec:
         {{- toYaml .Values.initContainers.contains | nindent 8 }}
         {{- end }}
       volumes: #指的是Pod中的卷
+        {{ include "basic.volumes" . | nindent 8 }}
         - name: app-volume
           emptyDir: {} #容器目录是emptyDir{}，这个就相当于一个共享卷，是一个临时的目录，生命周期等同于Pod的生命周期
       containers:
         - name: {{ .Chart.Name }}
           env:
+            {{ include "basic.envs" . | nindent 12 }}
             - name: HOST_IP
               valueFrom:
                 fieldRef:
@@ -82,6 +84,7 @@ spec:
           {{- end}}
         {{- end }}
           volumeMounts: #将指定的卷mount到容器指定的位置
+            {{ include "basic.volumeMounts" . | nindent 12 }}
             - mountPath: /app/
               name: app-volume
           resources:
