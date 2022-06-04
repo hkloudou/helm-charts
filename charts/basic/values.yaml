@@ -44,7 +44,7 @@ securityContext: {}
 
 service:
   enabled: false
-  headlessEnabled: false
+  headless: false
   type: ClusterIP
   port: 80
   targetPort: http
@@ -116,4 +116,4 @@ tolerations: []
 
 affinity: {}
 
-envs: 
+envs: []
