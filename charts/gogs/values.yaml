@@ -72,7 +72,7 @@ cifs:
   - name: RUN_CROND
     value: "true"
   - name: BACKUP_INTERVAL
-    value: "3h"
+    value: "1d"
   # existingClaim: 
 # 
   # - name: test
