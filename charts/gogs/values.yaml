@@ -62,7 +62,28 @@ persistence:
   enabled: false
   size: 10Gi
   accessMode: ReadWriteOnce
+cifs:
+  enabled: false
+  networkPath: ""
+  mountOptions: "dir_mode=0755,file_mode=0644,noperm"
+  secretName: "cifs-secret"
+  subPath: "gogs_backup"
+  env:
+  - name: RUN_CROND
+    value: "true"
+  - name: BACKUP_INTERVAL
+    value: "3h"
   # existingClaim: 
+# 
+  # - name: test
+  #   flexVolume:
+  #     driver: "fstab/cifs"
+  #     fsType: "cifs"
+  #     secretRef:
+  #       name: "cifs-secret"
+  #     options:
+  #       networkPath: "//server/share"
+  #       mountOptions: "dir_mode=0755,file_mode=0644,noperm"
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

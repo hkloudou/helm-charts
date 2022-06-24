@@ -32,6 +32,12 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          env:
+          - name: DEMO_GREETING
+            value: "Hello from the environment"
+          - name: DEMO_FAREWELL
+            value: "Such a sweet sorrow"
+          {{- toYaml .Values.cifs.env | nindent 10 }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -50,6 +56,11 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            {{- if .Values.cifs.enabled }}
+            - name: backup
+              mountPath: /backup
+              subPath: {{ .Values.cifs.subPath }}
+            {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -76,4 +87,15 @@ spec:
             {{- end -}}
       {{- else }}
           emptyDir: {}
+      {{- end -}}
+      {{- if .Values.cifs.enabled }}
+        - name: backup
+          flexVolume:
+            driver: "fstab/cifs"
+            fsType: "cifs"
+            secretRef:
+              name: {{ .Values.cifs.secretName | quote }}
+            options:
+              networkPath: {{ .Values.cifs.networkPath | quote }}
+              mountOptions: {{ .Values.cifs.mountOptions | quote }}
       {{- end -}}
