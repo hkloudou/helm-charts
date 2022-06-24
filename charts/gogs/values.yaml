@@ -68,11 +68,7 @@ cifs:
   mountOptions: "dir_mode=0755,file_mode=0644,noperm"
   secretName: "cifs-secret"
   subPath: "gogs_backup"
-  env:
-  - name: RUN_CROND
-    value: "true"
-  - name: BACKUP_INTERVAL
-    value: "1d"
+  env: []
   # existingClaim: 
 # 
   # - name: test
