@@ -33,10 +33,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
-          - name: DEMO_GREETING
-            value: "Hello from the environment"
-          - name: DEMO_FAREWELL
-            value: "Such a sweet sorrow"
+          # - name: DEMO_GREETING
+          #   value: "Hello from the environment"
+          # - name: DEMO_FAREWELL
+          #   value: "Such a sweet sorrow"
           {{- toYaml .Values.cifs.env | nindent 10 }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
