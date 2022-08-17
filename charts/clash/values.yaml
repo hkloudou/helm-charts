@@ -42,9 +42,14 @@ service:
 config:
   enable: false
   value: ""
+  # existingClaim: ""
   schedule: "50 * * * *"
   path: "/etc/clash"
+  # predb: 
   # schedule: "*"
+secretFile:
+  enable: false
+  mounted: /secret
 ingress:
   enabled: true
   className: ""

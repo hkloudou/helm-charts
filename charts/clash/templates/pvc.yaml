@@ -1,3 +1,4 @@
+{{- if not .Values.config.existingClaim }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -11,3 +12,4 @@ spec:
   resources:
     requests:
       storage: 2Gi
+{{- end -}}

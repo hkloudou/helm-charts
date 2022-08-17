@@ -68,7 +68,7 @@ Create the name of the service account to use
 {{- define "clash.volumes" -}}
 - name: shared-data
   persistentVolumeClaim:
-    claimName: {{ printf "%s-pvc" (include "clash.fullname" .) }}
+    claimName: {{ .Values.config.existingClaim | default (printf "%s-pvc" (include "clash.fullname" .)) }}
 {{- if .Values.config.enable}}
 - name: auto-config-files
   configMap:

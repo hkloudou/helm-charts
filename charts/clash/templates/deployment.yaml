@@ -36,8 +36,9 @@ spec:
             [
               "sh",
               "-c",
-              "if [ -f /init/config.yaml ];then cp -u /init/config.yaml {{.Values.config.path}}/config.yaml; fi",
+              "{{- if .Values.secretFile.predb -}}if [ -f {{.Values.config.path}}/config.yaml ];then wget -O {{.Values.config.path}}/Country.mmdb {{.Values.config.predb}}; fi && {{- end -}}if [ -f /init/config.yaml ];then cp -u /init/config.yaml {{.Values.config.path}}/config.yaml; fi",
             ]
+
           volumeMounts: 
             {{ include "clash.volumeMounts" . | nindent 12 }}
       containers:
@@ -56,14 +57,14 @@ spec:
               containerPort: 7890
               protocol: TCP
           command: ["/clash","-d","{{.Values.config.path}}"]
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
