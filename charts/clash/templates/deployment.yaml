@@ -36,9 +36,8 @@ spec:
             [
               "sh",
               "-c",
-              "{{- if .Values.secretFile.predb -}}if [ -f {{.Values.config.path}}/config.yaml ];then wget -O {{.Values.config.path}}/Country.mmdb {{.Values.config.predb}}; fi && {{- end -}}if [ -f /init/config.yaml ];then cp -u /init/config.yaml {{.Values.config.path}}/config.yaml; fi",
+              "echo xx:{{.Values.config.predb}} &&{{- if .Values.config.predb -}}echo 'Ready download' && if [ ! -f {{.Values.config.path}}/Country.mmdb ];then wget -O {{.Values.config.path}}/Country.mmdb {{.Values.config.predb}}; fi && {{- end -}}if [ ! -f {{.Values.config.path}}/config.yaml ];then cp /init/config.yaml {{.Values.config.path}}/config.yaml && chmod -R 777 {{.Values.config.path}}/config.yaml > /dev/null; fi",
             ]
-
           volumeMounts: 
             {{ include "clash.volumeMounts" . | nindent 12 }}
       containers:

@@ -1,4 +1,3 @@
-{{- if .Values.config.enable}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,6 +5,16 @@ metadata:
   labels:
     {{- include "clash.labels" . | nindent 4 }}
 data:
+  {{- if .Values.config.enable}}
   config.yaml: |-
-  {{- .Values.config.value | nindent 4 }}
-{{- end }}
+    {{- .Values.config.value | nindent 4 }}
+  {{- end }}
+  cron.sh: |-
+    export https_proxy=http://clash-node:7890 http_proxy=http://clash-node:7890 all_proxy=socks5://clash-node:7890
+    echo 'upgrading...'
+    curl -o '{{.Values.config.path}}/config.yaml' '{{.Values.config.url}}'
+    echo 'upgraded'
+    export https_proxy= http_proxy= all_proxy=
+    curl -X PUT -d '{"path":"{{.Values.config.path}}/config.yaml"}' {{ include "clash.fullname" . }}/configs
+    echo 'end'
+    sleep 300

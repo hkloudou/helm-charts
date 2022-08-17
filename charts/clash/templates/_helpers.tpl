@@ -73,6 +73,7 @@ Create the name of the service account to use
 - name: auto-config-files
   configMap:
     name: {{ printf "%s-config-files" (include "clash.fullname" .) }}
+    defaultMode: 0777
 {{- end -}}
 {{- end -}}
 
@@ -81,7 +82,6 @@ Create the name of the service account to use
   mountPath: {{.Values.config.path}}
 {{- if .Values.config.enable}}
 - name: auto-config-files
-  mountPath: /init/config.yaml
-  subPath: config.yaml
+  mountPath: /init/
 {{- end -}}
 {{- end -}}

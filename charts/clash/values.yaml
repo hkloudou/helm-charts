@@ -43,7 +43,7 @@ config:
   enable: false
   value: ""
   # existingClaim: ""
-  schedule: "50 * * * *"
+  schedule: "35 * * * *"
   path: "/etc/clash"
   # predb: 
   # schedule: "*"

@@ -17,11 +17,10 @@ spec:
             {{ include "clash.volumes" . | nindent 12 }}   
           containers:
           - name: upgrade
-            image: busybox:1.35.0
+            image: curlimages/curl:7.84.0
             command:
               - sh
-              - -c
-              - "export https_proxy=http://clash-node:7890 http_proxy=http://clash-node:7890 all_proxy=socks5://clash-node:7890 && echo 'upgrading...' && wget -O '{{.Values.config.path}}/config.yaml' '{{.Values.config.url}}' && echo 'upgraded' && echo 'end'"
+              - /init/cron.sh
             volumeMounts: #将指定的卷mount到容器指定的位置
               {{ include "clash.volumeMounts" . | nindent 14 }}
 {{- end }}
