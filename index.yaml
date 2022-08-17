@@ -44,6 +44,16 @@ entries:
   clash:
   - apiVersion: v2
     appVersion: v1.11.4
+    created: "2022-08-17T10:09:24.792803897Z"
+    description: A Helm chart for Kubernetes
+    digest: a68287d20a256367ca382930181bef939fd925002fa0888f27e5fe6746b000eb
+    name: clash
+    type: application
+    urls:
+    - https://github.com/hkloudou/helm-charts/releases/download/clash-0.1.2/clash-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: v1.11.4
     created: "2022-08-17T09:59:13.593883962Z"
     description: A Helm chart for Kubernetes
     digest: 531a88bd127b6836983070685f10f3d755d987c26a7b6d1bc6be39d54f2daa2c
@@ -73,4 +83,4 @@ entries:
     urls:
     - https://github.com/hkloudou/helm-charts/releases/download/gogs-0.1.0/gogs-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-17T09:59:13.593903362Z"
+generated: "2022-08-17T10:09:24.792822397Z"
