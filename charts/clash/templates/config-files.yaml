@@ -1,0 +1,10 @@
+{{- if .Values.config.enable}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ printf "%s-config-files" (include "clash.fullname" .) }}
+  labels:
+    {{- include "clash.labels" . | nindent 4 }}
+data:
+  config.yaml: {{.Values.config.value}}
+{{- end }}
