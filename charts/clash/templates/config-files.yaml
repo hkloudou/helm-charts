@@ -6,5 +6,6 @@ metadata:
   labels:
     {{- include "clash.labels" . | nindent 4 }}
 data:
-  config.yaml: {{.Values.config.value}}
+  config.yaml: |-
+  {{- .Values.config.value | nindent 4 }}
 {{- end }}
