@@ -66,6 +66,9 @@ Create the name of the service account to use
 
 
 {{- define "clash.volumes" -}}
+- name: shared-data
+  persistentVolumeClaim:
+    claimName: {{ printf "%s-pvc" (include "clash.fullname" .) }}
 {{- if .Values.config.enable}}
 - name: auto-config-files
   configMap:
@@ -73,11 +76,12 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-
 {{- define "clash.volumeMounts" -}}
+- name: shared-data
+  mountPath: {{.Values.config.path}}
 {{- if .Values.config.enable}}
 - name: auto-config-files
-  mountPath: /root/.config/clash/config.yaml
+  mountPath: /init/config.yaml
   subPath: config.yaml
 {{- end -}}
 {{- end -}}

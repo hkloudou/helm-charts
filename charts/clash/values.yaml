@@ -42,6 +42,9 @@ service:
 config:
   enable: false
   value: ""
+  schedule: "50 * * * *"
+  path: "/etc/clash"
+  # schedule: "*"
 ingress:
   enabled: true
   className: ""

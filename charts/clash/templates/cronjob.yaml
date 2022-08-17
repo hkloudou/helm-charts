@@ -1,0 +1,27 @@
+{{- if and .Values.config.enable .Values.config.url}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ printf "%s-cron-job" (include "clash.fullname" .) }}
+  labels:
+    {{- include "clash.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.config.schedule }}
+  successfulJobsHistoryLimit: 0 
+  jobTemplate:
+    spec:
+      template:
+        spec:   
+          restartPolicy: Never
+          volumes: #指的是Pod中的卷
+            {{ include "clash.volumes" . | nindent 12 }}   
+          containers:
+          - name: upgrade
+            image: busybox:1.35.0
+            command:
+              - sh
+              - -c
+              - "export https_proxy=http://clash-node:7890 http_proxy=http://clash-node:7890 all_proxy=socks5://clash-node:7890 && echo 'upgrading...' && wget -O '{{.Values.config.path}}/config.yaml' '{{.Values.config.url}}' && echo 'upgraded' && echo 'end'"
+            volumeMounts: #将指定的卷mount到容器指定的位置
+              {{ include "clash.volumeMounts" . | nindent 14 }}
+{{- end }}

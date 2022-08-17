@@ -29,6 +29,17 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes: #指的是Pod中的卷
         {{ include "clash.volumes" . | nindent 8 }}
+      initContainers:
+        - name: init
+          image: busybox:stable
+          command:
+            [
+              "sh",
+              "-c",
+              "if [ -f /init/config.yaml ];then cp -u /init/config.yaml {{.Values.config.path}}/config.yaml; fi",
+            ]
+          volumeMounts: 
+            {{ include "clash.volumeMounts" . | nindent 12 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -44,6 +55,7 @@ spec:
             - name: p1
               containerPort: 7890
               protocol: TCP
+          command: ["/clash","-d","{{.Values.config.path}}"]
           # livenessProbe:
           #   httpGet:
           #     path: /
