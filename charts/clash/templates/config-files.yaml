@@ -1,6 +1,6 @@
 {{- if .Values.config.enable}}
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
   name: {{ printf "%s-config-files" (include "clash.fullname" .) }}
   labels:

@@ -68,8 +68,8 @@ Create the name of the service account to use
 {{- define "clash.volumes" -}}
 {{- if .Values.config.enable}}
 - name: auto-config-files
-  secret:
-    secretName: {{ printf "%s-config-files" (include "clash.fullname" .) }}
+  configMap:
+    name: {{ printf "%s-config-files" (include "clash.fullname" .) }}
 {{- end -}}
 {{- end -}}
 
@@ -77,6 +77,7 @@ Create the name of the service account to use
 {{- define "clash.volumeMounts" -}}
 {{- if .Values.config.enable}}
 - name: auto-config-files
-  mountPath: {{ .Values.config.mounted }}
+  mountPath: /root/.config/clash/config.yaml
+  subPath: config.yaml
 {{- end -}}
 {{- end -}}
