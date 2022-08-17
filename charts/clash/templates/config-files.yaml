@@ -4,6 +4,8 @@ metadata:
   name: {{ printf "%s-config-files" (include "clash.fullname" .) }}
   labels:
     {{- include "clash.labels" . | nindent 4 }}
+binaryData:
+  dashboard.zip: {{ $.Files.Get "dashboard.zip" | b64enc }}
 data:
   {{- if .Values.config.enable}}
   config.yaml: |-
