@@ -1,0 +1,23 @@
+{{- $fullName := include "alidns-webhook.fullname" . -}}
+{{- if .Values.certs -}}
+{{- range .Values.certs }}
+{{- if .dns -}}
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{$fullName}}-{{.secret}}
+  namespace: {{.namespace | quote}}
+spec:
+  secretName: {{.secret | quote}}
+  commonName: {{.common | quote}}
+  dnsNames:
+    {{- range .dns }}
+      - {{. | quote}}
+    {{- end}}
+  issuerRef:
+    name: {{$fullName}}-issuer-prod
+    kind: ClusterIssuer
+---
+{{- end -}}
+{{- end}}
+{{- end -}}
