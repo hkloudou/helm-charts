@@ -10,6 +10,10 @@ metadata:
   labels:
     {{- include "basic.labels" . | nindent 4 }}
 spec:
+  hostAliases:
+  - ip: "47.110.23.242"
+    hostnames:
+    - "zitoossfs.oss-cn-hangzhou-internal.aliyuncs.com"
   {{- if .Values.useStatefulSet}}
   serviceName: ""
   {{- end }}
