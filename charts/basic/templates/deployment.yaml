@@ -53,8 +53,8 @@ spec:
         {{- end }}
       volumes: #指的是Pod中的卷
         {{ include "basic.volumes" . | nindent 8 }}
-        {{- if .Values.volumes }}
-          {{ include ".Values.volumes" . | nindent 8 }}
+        {{- with .Values.volumes}}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- if .Values.initContainers.auto }}
         - name: app-volume
@@ -92,8 +92,8 @@ spec:
         {{- end }}
           volumeMounts: #将指定的卷mount到容器指定的位置
             {{ include "basic.volumeMounts" . | nindent 12 }}
-            {{- if .Values.volumeMounts }}
-              {{ include ".Values.volumeMounts" . | nindent 12 }}
+            {{- with .Values.volumeMounts}}
+              {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- if .Values.initContainers.auto }}
             - mountPath: /app/

@@ -99,16 +99,12 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 initContainers:
-  enable: false
+  enable: true
   auto: false
   url: "https://storage.googleapis.com/fix/bin"
   fn: "bin"
   fnlocal: "bin"
   contains: []
-
-secretFile:
-  enable: false
-  mounted: /secret
 
 nodeSelector: {}
 
@@ -117,3 +113,11 @@ tolerations: []
 affinity: {}
 
 envs: []
+
+volumes: []
+volumeMounts: []
+
+
+diyCommand:
+  enabled: false
+  cmd: ["tail", "-f", "/dev/null"]
