@@ -121,3 +121,5 @@ volumeMounts: []
 diyCommand:
   enabled: false
   cmd: ["tail", "-f", "/dev/null"]
+secretFile:
+  enable: false
