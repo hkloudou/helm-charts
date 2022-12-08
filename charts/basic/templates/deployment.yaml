@@ -84,6 +84,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.lifecycle }}
+          {{- if .enabled }}
+          lifecycle:
+            {{- toYaml .item | nindent 12 }}
+          {{- end}}
+        {{- end }}
         {{- with .Values.ports }}
           {{- if .enabled }}
           ports:
