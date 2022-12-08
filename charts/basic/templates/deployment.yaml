@@ -1,3 +1,11 @@
+{{- define "tplvalues.render" -}}
+    {{- if typeIs "string" .value }}
+        {{- tpl .value .context }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .context }}
+    {{- end }}
+{{- end -}}
+
 {{- if .Values.useStatefulSet}}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -84,12 +92,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- with .Values.lifecycle }}
-          {{- if .enabled }}
-          lifecycle:
-            {{- toYaml .item | nindent 12 }}
-          {{- end}}
-        {{- end }}
+          {{- if .Values.lifecycleHooks }}
+          lifecycle: {{- include "tplvalues.render" (dict "value" .Values.lifecycleHooks "context" $) | nindent 12 }}
+          {{- end }}
         {{- with .Values.ports }}
           {{- if .enabled }}
           ports:
