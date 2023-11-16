@@ -63,6 +63,7 @@ Create the name of the service account to use
 
 
 {{- define "basic.volumes" -}}
+
 {{- if .Values.secretFile.enable}}
 - name: auto-secret-files
   secret:
@@ -74,19 +75,22 @@ Create the name of the service account to use
   configMap:
     name: {{ printf "%s-config-files" (include "basic.fullname" .) }}
 {{- end -}}
+
 {{- end -}}
 
 
 {{- define "basic.volumeMounts" -}}
-{{- if .Values.configFile.enable}}
+
+{{- if .Values.secretFile.enable}}
 - name: auto-secret-files
   mountPath: {{ .Values.secretFile.mounted }}
 {{- end -}}
 
 {{- if .Values.configFile.enable}}
 - name: auto-config-files
-  mountPath: {{ .Values.secretFile.mounted }}
+  mountPath: {{ .Values.configFile.mounted }}
 {{- end -}}
+
 {{- end -}}
 
 {{- define "basic.envs"}}
