@@ -68,12 +68,23 @@ Create the name of the service account to use
   secret:
     secretName: {{ printf "%s-secret-files" (include "basic.fullname" .) }}
 {{- end -}}
+
+{{- if .Values.configFile.enable}}
+- name: auto-config-files
+  configMap:
+    name: {{ printf "%s-config-files" (include "basic.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 
 {{- define "basic.volumeMounts" -}}
-{{- if .Values.secretFile.enable}}
+{{- if .Values.configFile.enable}}
 - name: auto-secret-files
+  mountPath: {{ .Values.secretFile.mounted }}
+{{- end -}}
+
+{{- if .Values.configFile.enable}}
+- name: auto-config-files
   mountPath: {{ .Values.secretFile.mounted }}
 {{- end -}}
 {{- end -}}
