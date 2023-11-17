@@ -124,3 +124,5 @@ diyCommand:
   cmd: ["tail", "-f", "/dev/null"]
 secretFile:
   enable: false
+configFile:
+  enable: false
