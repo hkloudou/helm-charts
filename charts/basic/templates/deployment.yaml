@@ -48,11 +48,20 @@ spec:
         - name: init-data
           image: busybox:stable
           command:
-            [
-              "sh",
-              "-c",
-              "if [ ! -f /data/{{ .Values.initContainers.fnlocal }} ];then wget -O /data/{{ .Values.initContainers.fnlocal }} {{ .Values.initContainers.url }}/{{ .Values.initContainers.fn }} && chmod +x /data/{{ .Values.initContainers.fnlocal }}; fi",
-            ]
+          - "sh"
+          - "-c"
+          - |
+            ARCH=$(uname -m)
+            if [ "$ARCH" = "aarch64" ]; then
+                ARCH="arm64"
+            fi
+            OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+            FN=$(echo "{{ .Values.initContainers.fn }}" | sed "s/#ARCH/$ARCH/" | sed "s/#OS/$OS/")
+            echo $FN
+            if [ ! -f /data/{{ .Values.initContainers.fnlocal }} ]; then
+              wget -O /data/{{ .Values.initContainers.fnlocal }} {{ .Values.initContainers.url }}/$FN
+              chmod +x /data/{{ .Values.initContainers.fnlocal }}
+            fi
           volumeMounts: 
             - mountPath: /data
               name: app-volume
