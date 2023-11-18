@@ -3,6 +3,16 @@ entries:
   basic:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-11-18T20:16:12.760947842Z"
+    description: A basic Helm chart
+    digest: ce955c688928df81905681b50c9a9ceae61eac7cbe56618822a7a55118a5db64
+    name: basic
+    type: application
+    urls:
+    - https://github.com/hkloudou/helm-charts/releases/download/basic-0.1.17/basic-0.1.17.tgz
+    version: 0.1.17
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-11-18T19:51:40.981775877Z"
     description: A basic Helm chart
     digest: ba6ae295d854fdfa23aeefe2d1ed1b8cbe5f5911c4a4cc7d8d7502302fa95a0d
@@ -263,4 +273,4 @@ entries:
     urls:
     - https://github.com/hkloudou/helm-charts/releases/download/gogs-0.1.0/gogs-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-18T19:51:40.981922971Z"
+generated: "2023-11-18T20:16:12.761095246Z"
