@@ -64,7 +64,7 @@ spec:
             fi
           volumeMounts: 
             - mountPath: /data
-              name: app-volume
+              name: init-volume
         {{- else if .Values.initContainers.enable }}
         {{- toYaml .Values.initContainers.contains | nindent 8 }}
         {{- end }}
@@ -73,8 +73,8 @@ spec:
         {{- with .Values.volumes}}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.initContainers.auto }}
-        - name: app-volume
+        {{- if .Values.initContainers.enable }}
+        - name: init-volume
           emptyDir: {} #容器目录是emptyDir{}，这个就相当于一个共享卷，是一个临时的目录，生命周期等同于Pod的生命周期
         {{- end }}
       containers:
@@ -115,9 +115,9 @@ spec:
             {{- with .Values.volumeMounts}}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- if .Values.initContainers.auto }}
+          {{- if .Values.initContainers.enable }}
             - mountPath: /app/
-              name: app-volume
+              name: init-volume
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
