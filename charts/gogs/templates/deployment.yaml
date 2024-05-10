@@ -32,16 +32,13 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          env:
-          # - name: DEMO_GREETING
-          #   value: "Hello from the environment"
-          # - name: DEMO_FAREWELL
-          #   value: "Such a sweet sorrow"
           {{- if .Values.cifs.enabled }}
-            {{- toYaml .Values.cifs.env | nindent 10 }}
+          env:
+            {{- toYaml .Values.cifs.env | nindent 12 }}
           {{- else if .Values.backup.enabled }}
-            {{- toYaml .Values.backup.env | nindent 10 }}
-          {{- end -}}
+          env:
+            {{- toYaml .Values.backup.env | nindent 12 }}
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
