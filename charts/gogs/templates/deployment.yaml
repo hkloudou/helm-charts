@@ -39,7 +39,7 @@ spec:
           #   value: "Such a sweet sorrow"
           {{- if .Values.cifs.enabled }}
             {{- toYaml .Values.cifs.env | nindent 10 }}
-          {{- elseif .Values.backup.enabled }}
+          {{- else if .Values.backup.enabled }}
             {{- toYaml .Values.backup.env | nindent 10 }}
           {{- end -}}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -64,7 +64,7 @@ spec:
             - name: backup
               mountPath: /backup
               subPath: {{ .Values.cifs.subPath }}
-            {{- elseif .Values.cifs.enabled }}
+            {{- else if .Values.cifs.enabled }}
             - name: backup
               mountPath: /backup
               subPath: {{ .Values.backup.subPath }}
@@ -106,7 +106,7 @@ spec:
             options:
               networkPath: {{ .Values.cifs.networkPath | quote }}
               mountOptions: {{ .Values.cifs.mountOptions | quote }}
-      {{- elseif .Values.backup.enabled }}
+      {{- else if .Values.backup.enabled }}
         - name: backup
           persistentVolumeClaim:
             claimName: {{ .Values.backup.claimName }}
