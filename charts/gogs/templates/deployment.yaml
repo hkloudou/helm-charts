@@ -37,7 +37,11 @@ spec:
           #   value: "Hello from the environment"
           # - name: DEMO_FAREWELL
           #   value: "Such a sweet sorrow"
-          {{- toYaml .Values.cifs.env | nindent 10 }}
+          {{- if .Values.cifs.enabled }}
+            {{- toYaml .Values.cifs.env | nindent 10 }}
+          {{- elseif .Values.backup.enabled }}
+            {{- toYaml .Values.backup.env | nindent 10 }}
+          {{- end -}}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -60,6 +64,10 @@ spec:
             - name: backup
               mountPath: /backup
               subPath: {{ .Values.cifs.subPath }}
+            {{- elseif .Values.cifs.enabled }}
+            - name: backup
+              mountPath: /backup
+              subPath: {{ .Values.backup.subPath }}
             {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -98,4 +106,8 @@ spec:
             options:
               networkPath: {{ .Values.cifs.networkPath | quote }}
               mountOptions: {{ .Values.cifs.mountOptions | quote }}
+      {{- elseif .Values.backup.enabled }}
+        - name: backup
+          persistentVolumeClaim:
+            claimName: {{ .Values.backup.claimName }}
       {{- end -}}

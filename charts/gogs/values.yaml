@@ -73,6 +73,17 @@ cifs:
     value: "false"
   - name: BACKUP_INTERVAL
     value: "1d"
+backup:
+  enabled: false
+  subPath: "gogs_backup"
+  claimName: ""
+  env:
+  - name: RUN_CROND
+    value: "false"
+  - name: BACKUP_INTERVAL
+    value: "1d"
+# juice:
+
   # existingClaim: 
 # 
   # - name: test
