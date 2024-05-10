@@ -61,7 +61,7 @@ spec:
             - name: backup
               mountPath: /backup
               subPath: {{ .Values.cifs.subPath }}
-            {{- else if .Values.cifs.enabled }}
+            {{- else if .Values.backup.enabled }}
             - name: backup
               mountPath: /backup
               subPath: {{ .Values.backup.subPath }}
