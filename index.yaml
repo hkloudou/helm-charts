@@ -265,6 +265,16 @@ entries:
   gogs:
   - apiVersion: v2
     appVersion: 0.12.9
+    created: "2024-05-10T18:16:53.373141653Z"
+    description: A Helm chart for Kubernetes
+    digest: be846215eabb9759dd00424ffb2ffdf2e9ff94bfdf4873b8993f9f851a6ffe77
+    name: gogs
+    type: application
+    urls:
+    - https://github.com/hkloudou/helm-charts/releases/download/gogs-0.1.5/gogs-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 0.12.9
     created: "2024-05-10T17:57:02.433818823Z"
     description: A Helm chart for Kubernetes
     digest: 6228b75e33935163287dd8d4e4e03683fde5864730651dd2974e6253f40f14f3
@@ -313,4 +323,4 @@ entries:
     urls:
     - https://github.com/hkloudou/helm-charts/releases/download/gogs-0.1.0/gogs-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-10T17:57:02.433962872Z"
+generated: "2024-05-10T18:16:53.373238734Z"
