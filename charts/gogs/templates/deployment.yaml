@@ -27,10 +27,86 @@ spec:
       serviceAccountName: {{ include "gogs.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      
+      {{- if and .Values.restore (gt (len .Values.restore) 0) }}
+      initContainers:
+        - name: restore
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          # imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+
+              # 确保日志目录存在
+              if [ ! -d /app/gogs/log ]; then
+                  echo "/app/gogs/log 目录不存在，正在创建..."
+                  mkdir -p /app/gogs/log
+              fi
+
+              # 检查并删除现有的 /app/gogs/custom 目录
+              if [ -d /app/gogs/custom ]; then
+                  echo "/app/gogs/custom 目录已存在，正在删除..."
+                  rm -rf /app/gogs/custom
+              fi
+
+              # 设置 Gogs 安装目录及子目录的权限
+              chown -R git:git /app/gogs
+              chmod -R 755 /app/gogs
+
+              # chown -R git:git /data/gogs/gogs
+              # chown -R git:git /data/ssh && chown -R 755 /data/ssh
+
+              # 检查备份文件是否存在
+              if [ -f {{ .Values.restore }} ]; then
+                  echo "备份文件存在，准备恢复..."
+
+                  
+                  # 以 git 用户身份执行恢复命令
+                  su - git -c "/app/gogs/gogs restore --from {{ .Values.restore }}"
+                  
+                  if [ $? -eq 0 ]; then
+                      echo "恢复完成。"
+                  else
+                      echo "恢复过程中出现错误。"
+                      exit 1;
+                  fi
+              else
+                  echo "{{ .Values.restore }} 文件不存在，请检查路径。"
+                  exit 1;
+              fi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            # - name: backup
+            #   mountPath: /backup
+            #   readOnly: true
+      {{- end }}
       containers:
+        {{- if and .Values.backup.enabled .Values.backup.juicefs (gt (len .Values.backup.juicefs) 0) }}
+        - name: juicefs
+          image: docker.io/juicedata/juicefs-csi-driver:v0.24.7
+          securityContext:
+            privileged: true  # 给此容器赋予privileged权限
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+
+              juicefs mount {{ .Values.backup.juicefs }} /backup && tail -f /dev/null
+
+          volumeMounts:
+          - name: backup
+            mountPath: /backup
+            mountPropagation: Bidirectional
+        {{- end }}
         - name: {{ .Chart.Name }}
           securityContext:
+            {{- if and .Values.backup.enabled .Values.backup.juicefs (gt (len .Values.backup.juicefs) 0) }}
+            privileged: true
+            {{- else }}
             {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- end}}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           {{- if .Values.cifs.enabled }}
           env:
@@ -64,7 +140,7 @@ spec:
             {{- else if .Values.backup.enabled }}
             - name: backup
               mountPath: /backup
-              subPath: {{ .Values.backup.subPath }}
+              mountPropagation: Bidirectional
             {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -104,7 +180,12 @@ spec:
               networkPath: {{ .Values.cifs.networkPath | quote }}
               mountOptions: {{ .Values.cifs.mountOptions | quote }}
       {{- else if .Values.backup.enabled }}
+        {{- if and .Values.backup.enabled .Values.backup.juicefs (gt (len .Values.backup.juicefs) 0) }}
+        - name: backup
+          emptyDir: {} 
+        {{- else }}
         - name: backup
           persistentVolumeClaim:
             claimName: {{ .Values.backup.claimName }}
+        {{- end }}
       {{- end -}}

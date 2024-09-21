@@ -76,6 +76,7 @@ cifs:
 backup:
   enabled: false
   subPath: "gogs_backup"
+  juicefs: ""
   claimName: ""
   env:
   - name: RUN_CROND
