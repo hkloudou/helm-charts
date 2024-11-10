@@ -140,7 +140,11 @@ spec:
             {{- else if .Values.backup.enabled }}
             - name: backup
               mountPath: /backup
+              {{- if and .Values.backup.juicefs (gt (len .Values.backup.juicefs) 0) }}
               mountPropagation: Bidirectional
+              {{- else if and .Values.backup.subPath (gt (len .Values.backup.subPath) 0) }}
+              subPath: {{ .Values.backup.subPath }}
+              {{- end }}
             {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
