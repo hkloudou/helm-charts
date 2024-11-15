@@ -51,7 +51,7 @@ secretFile:
   enable: false
   mounted: /secret
 ingress:
-  enabled: true
+  enabled: false
   className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
