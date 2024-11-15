@@ -18,14 +18,59 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "basic.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  # annotations
   annotations:
+    {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- end }}
+
+    {{- if and .Values.ingress.simple.enabled .Values.ingress.simple.tls }}
+    {{- if eq .Values.ingress.className "traefik"}}
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.tls.certresolver: {{ .Values.ingress.simple.certresolver | quote }}
+    {{- end }}
+    {{- end }}
+  # end annotations
 spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
+
+  # simple:
+  #   enabled: false
+  #   host: "chart-example.local"
+  #   certresolver: ""
+  #   path: /
+  #   pathType: ImplementationSpecific
+  #   tls: true
+  {{- if .Values.ingress.simple.enabled}}
+  {{- if .Values.ingress.simple.tls}}
+  # 简单模式
+  tls:
+    - hosts:
+      - {{ .Values.ingress.simple.host | quote }}
+  {{- end}}
+  rules:
+    - host: {{ .Values.ingress.simple.host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.simple.path }}
+            {{- if and .Values.ingress.simple.pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .Values.ingress.simple.pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}
+              servicePort: {{ $svcPort }}
+              {{- end }}
+  # 简单模式结束
+  {{- else}}
+  # 复杂模式
   {{- if .Values.ingress.tls }}
   tls:
     {{- range .Values.ingress.tls }}
@@ -60,4 +105,5 @@ spec:
               {{- end }}
           {{- end }}
     {{- end }}
+  {{- end}}
 {{- end }}
