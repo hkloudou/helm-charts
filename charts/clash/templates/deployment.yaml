@@ -33,11 +33,22 @@ spec:
         - name: init
           image: busybox:stable
           command:
-            [
-              "sh",
-              "-c",
-              "unzip -o -d {{.Values.config.path}}/ui /init/dashboard && echo xx:{{.Values.config.predb}} &&{{- if .Values.config.predb -}}echo 'Ready download' && if [ ! -f {{.Values.config.path}}/Country.mmdb ];then wget -O {{.Values.config.path}}/Country.mmdb {{.Values.config.predb}}; fi && {{- end -}}if [ -f /init/config.yaml ];then cp -u /init/config.yaml {{.Values.config.path}}/config.yaml && chmod -R 777 {{.Values.config.path}}/config.yaml > /dev/null; fi",
-            ]
+            - "sh"
+            - "-c"
+            - |
+              unzip -o -d {{ .Values.config.path }}/ui /init/dashboard
+
+              {{- if .Values.config.predb }}
+              echo "Ready to download predb file"
+              if [ ! -f {{ .Values.config.path }}/Country.mmdb ]; then
+                wget -q -O {{ .Values.config.path }}/Country.mmdb {{ .Values.config.predb }}
+              fi
+              {{- end }}
+
+              if [ -f /init/config.yaml ]; then
+                cp -u /init/config.yaml {{ .Values.config.path }}/config.yaml
+                chmod 644 {{ .Values.config.path }}/config.yaml > /dev/null
+              fi
           volumeMounts: 
             {{ include "clash.volumeMounts" . | nindent 12 }}
       containers:
@@ -56,14 +67,17 @@ spec:
               containerPort: 7890
               protocol: TCP
           command: ["/clash","-d","{{.Values.config.path}}","-ext-ui","{{.Values.config.path}}/ui/dashboard/"]
+          # command: ["/clash","-ext-ui","{{.Values.config.path}}/ui/dashboard/"]
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            tcpSocket:
+              port: p1
+            initialDelaySeconds: 5
+            periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            tcpSocket:
+              port: p1
+            initialDelaySeconds: 5
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
