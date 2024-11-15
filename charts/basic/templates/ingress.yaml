@@ -26,6 +26,7 @@ metadata:
 
     {{- if and .Values.ingress.simple.enabled .Values.ingress.simple.tls }}
     {{- if eq .Values.ingress.className "traefik"}}
+    kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.tls: "true"
     traefik.ingress.kubernetes.io/router.tls.certresolver: {{ .Values.ingress.simple.certresolver | quote }}
     {{- end }}
@@ -44,8 +45,8 @@ spec:
   #   pathType: ImplementationSpecific
   #   tls: true
   {{- if .Values.ingress.simple.enabled}}
-  {{- if .Values.ingress.simple.tls}}
   # 简单模式
+  {{- if .Values.ingress.simple.tls}}
   tls:
     - hosts:
       - {{ .Values.ingress.simple.host | quote }}
