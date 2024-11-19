@@ -38,12 +38,25 @@ spec:
             - |
               unzip -o -d {{ .Values.config.path }}/ui /init/dashboard
 
-              {{- if .Values.config.predb }}
-              echo "Ready to download predb file"
-              if [ ! -f {{ .Values.config.path }}/Country.mmdb ]; then
-                wget -q -O {{ .Values.config.path }}/Country.mmdb {{ .Values.config.predb }}
+              if [ ! -f "{{ .Values.config.path }}/Country.mmdb" ]; then
+                if [ -n "{{ .Values.config.predb }}" ]; then
+                  echo "Downloading Country.mmdb from {{ .Values.config.predb }}..."
+                  wget -q -O "{{ .Values.config.path }}/Country.mmdb" "{{ .Values.config.predb }}"
+                  if [ $? -ne 0 ]; then
+                    echo "Error: Failed to download Country.mmdb from {{ .Values.config.predb }}"
+                    exit 1
+                  fi
+                else
+                  echo "Copying Country.mmdb from /root/.config/clash..."
+                  cp "/root/.config/clash/Country.mmdb" "{{ .Values.config.path }}/Country.mmdb"
+                  if [ $? -ne 0 ]; then
+                    echo "Error: Failed to copy Country.mmdb from /root/.config/clash"
+                    exit 1
+                  fi
+                fi
+              else
+                echo "Country.mmdb already exists at {{ .Values.config.path }}/Country.mmdb"
               fi
-              {{- end }}
 
               if [ -f /init/config.yaml ]; then
                 cp -u /init/config.yaml {{ .Values.config.path }}/config.yaml

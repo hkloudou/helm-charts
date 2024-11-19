@@ -13,8 +13,11 @@ spec:
       template:
         spec:   
           restartPolicy: Never
+          serviceAccountName: {{ include "clash.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
           volumes: #指的是Pod中的卷
-            {{ include "clash.volumes" . | nindent 12 }}   
+            {{ include "clash.volumes" . | nindent 12 }}
           containers:
           - name: upgrade
             image: curlimages/curl:7.84.0

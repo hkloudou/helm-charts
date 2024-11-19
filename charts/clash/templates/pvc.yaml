@@ -1,4 +1,5 @@
-{{- if not .Values.config.existingClaim }}
+{{- if or (not .Values.config.existingClaim) (eq .Values.config.existingClaim "") }}
+# existingClaim 未定义或为空字符串时的逻辑
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:

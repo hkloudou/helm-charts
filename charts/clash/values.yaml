@@ -42,9 +42,9 @@ service:
 config:
   enable: false
   value: ""
-  # existingClaim: ""
+  existingClaim: ""
   schedule: "35 * * * *"
-  path: "/root/.config/clash"
+  path: "/etc/clash"
   # predb: 
   # schedule: "*"
 secretFile:

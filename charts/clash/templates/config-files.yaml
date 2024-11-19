@@ -14,9 +14,9 @@ data:
   cron.sh: |-
     export https_proxy=http://clash-node:7890 http_proxy=http://clash-node:7890 all_proxy=socks5://clash-node:7890
     echo 'upgrading...'
-    curl -o '{{.Values.config.path}}/config.yaml' '{{.Values.config.url}}'
-    echo 'upgraded'
+    curl -k -o '{{.Values.config.path}}/config.yaml' '{{.Values.config.url}}'
+    echo 'upgraded from {{.Values.config.url}}'
     export https_proxy= http_proxy= all_proxy=
     curl -X PUT -d '{"path":"{{.Values.config.path}}/config.yaml"}' {{ include "clash.fullname" . }}/configs
     echo 'end'
-    sleep 300
+    exit 0
