@@ -9,9 +9,13 @@ data:
   {{- if .Values.configFile.datas }}
     {{- range $key, $value := .Values.configFile.datas }}
       {{- if (kindIs "string" $value) }}
-        # If the value is a string, use it directly
+        # If the value is a string, we just use it directly
         {{ $key }}: |
           {{ $value | nindent 12 }}
+      {{- else if (kindIs "string" .Files.Get $value) }}
+        # If the value is a file path, we load the file content
+        {{ $key }}: |
+          {{ .Files.Get $value | nindent 12 }}
       {{- end }}
     {{- end }}
   {{- end }}
