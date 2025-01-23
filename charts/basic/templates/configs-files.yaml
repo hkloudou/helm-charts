@@ -1,4 +1,4 @@
-{{- if .Values.configFile.enable}}
+{{- if .Values.configFile.enable }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,7 +6,13 @@ metadata:
   labels:
     {{- include "basic.labels" . | nindent 4 }}
 data:
-  {{- if .Values.configFile.datas}}
-{{ .Values.configFile.datas | nindent 2}}
+  {{- if .Values.configFile.datas }}
+    {{- range $key, $value := .Values.configFile.datas }}
+      {{- if (kindIs "string" $value) }}
+        # If the value is a string, use it directly
+        {{ $key }}: |
+          {{ $value | nindent 12 }}
+      {{- end }}
+    {{- end }}
   {{- end }}
 {{- end }}
