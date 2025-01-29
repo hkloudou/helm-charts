@@ -5,16 +5,10 @@ metadata:
   name: {{ printf "%s-config-files" (include "basic.fullname" .) }}
   labels:
     {{- include "basic.labels" . | nindent 4 }}
-data:
+binaryData:
   {{- if .Values.configFile.datas }}
     {{- range $key, $value := .Values.configFile.datas }}
-      {{- if (kindIs "string" $value) }}
-        {{ $key }}: |
-          {{ $value | nindent 12 }}
-      {{- else }}
-        {{ $key }}: |
-          {{ .Files.Get $value | nindent 12 }}
-      {{- end }}
+      {{ $key }}:  {{ $value | b64enc }}
     {{- end }}
   {{- end }}
 {{- end }}
