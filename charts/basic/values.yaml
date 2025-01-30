@@ -112,6 +112,7 @@ initContainers:
   url: "https://storage.googleapis.com/fix/bin"
   fn: "bin"
   fnlocal: "bin"
+  initWorkDir: "/app/"
   contains: []
 
 nodeSelector: {}
@@ -125,6 +126,7 @@ envs: []
 
 volumes: []
 volumeMounts: []
+volumeClaimTemplates: []
 
 
 diyCommand:

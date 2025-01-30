@@ -20,6 +20,8 @@ metadata:
 spec:
   {{- if .Values.useStatefulSet}}
   serviceName: ""
+  volumeClaimTemplates:
+    {{- toYaml .Values.volumeClaimTemplates | nindent 4 }}
   {{- end }}
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -116,7 +118,7 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- if .Values.initContainers.enable }}
-            - mountPath: /app/
+            - mountPath: {{- .Values.initContainers.workdir }}
               name: init-volume
           {{- end }}
           resources:

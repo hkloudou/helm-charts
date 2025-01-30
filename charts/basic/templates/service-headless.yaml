@@ -7,6 +7,9 @@ metadata:
     {{- include "basic.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  clusterIP: None
+  clusterIPs:
+    - None
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
