@@ -118,7 +118,7 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- if .Values.initContainers.enable }}
-            - mountPath: {{- .Values.initContainers.workdir }}
+            - mountPath: {{.Values.initContainers.initWorkDir }}
               name: init-volume
           {{- end }}
           resources:
